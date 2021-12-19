@@ -1,5 +1,7 @@
 package com.capgemini.exception;
 
+import javax.security.auth.login.LoginException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -233,5 +235,63 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		headers.add("message", "NGO Already in database with that NGOID.");
 		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
 	}
+	
+	
+	@ExceptionHandler(InvalidNgoException.class)
+	public ResponseEntity<Object> handleInvalidNgoException() {
+		LOG.error("handleNoSuchNgoException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "Name must contain only alphabets.");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(NotvalidActivitesException.class)
+	public ResponseEntity<Object> handleNotvalidActivitesException() {
+		LOG.error("handleNotvalidActivitesException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "NGO Activites must contain only alphabets.");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
 
+	
+	@ExceptionHandler(NotvalidLocationException.class)
+	public ResponseEntity<Object> handleNotvalidLocationException() {
+		LOG.error("handleNotvalidLocationException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "NGO Location must contain only alphabets.");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(NotvalidMotiveException.class)
+	public ResponseEntity<Object> handleNotvalidMotiveException() {
+		LOG.error("handleNotvalidMotiveException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "NGO motive must contain only alphabets.");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(NotvalidTypeException.class)
+	public ResponseEntity<Object> handleNotvalidTypeException() {
+		LOG.error("handleNotvalidTypeException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "NGO type must contain only alphabets.");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
+	
+	
+	@ExceptionHandler(InvalidUserNameException.class)
+	public ResponseEntity<Object> handleInvalidUserNameException() {
+		LOG.error("handleInvalidUserNameException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "UserName is not valid");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity<Object> handleLoginException() {
+		LOG.error("handleLoginException");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("message", "You need to login first");
+		return new ResponseEntity<Object>(null, headers, HttpStatus.NOT_FOUND);
+	}
 }

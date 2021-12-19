@@ -6,47 +6,68 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.exception.IncorrectLoginCredentialsException;
+import com.capgemini.exception.LoginException;
 import com.capgemini.exception.UserAlreadyExistsException;
 import com.capgemini.model.User;
 import com.capgemini.repository.IUserRepository;
 
 @Service
 public class UserService implements IUserService {
-	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-	
-@Autowired
-private IUserRepository userRepository;
-	
-private User tempuser;
-private User temppassword;
-private Boolean isLoggedIn;
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-	public User registerUser(User user) {	
+	@Autowired
+	private IUserRepository userRepository;
+
+	public boolean IsLoggedIn;
+
+	// @Override
+	public User registerUser(User user) {
 		LOG.info("register");
-		if (userRepository.findByUserName(user.getUserName())!=null)
-		{	throw new UserAlreadyExistsException();
-		
+		if (userRepository.findByUserName(user.getUserName()) != null) {
+			throw new UserAlreadyExistsException();
+
+		} else {
+			return userRepository.save(user);
 		}
-		else
-		{
-		return userRepository.save(user);
+	}
+
+//  //This method is used for logout
+	@Override
+	public User Logout(User user) {
+		LOG.info("Servce adminlogout");
+		if (IsLoggedIn == true) {
+			LOG.info("You will be logged out");
+			IsLoggedIn = false;
+			return null;
+		} else {
+			LOG.warn("You need to Login first");
+			throw new LoginException("You need to be login first");
 		}
 	}
 
 	@Override
-	public User login(String username,String password) {
-		LOG.info("login");
-		this.tempuser = userRepository.findByUserName(username);
-		this.temppassword=userRepository.findByUserPassword(tempuser.getUserPassword());
-		if (tempuser.getUserName().equalsIgnoreCase(username) && temppassword.getUserPassword().equals(password)) {
-			isLoggedIn = true;
-			return tempuser;
+	public User Login(User user) {
+		LOG.info("Service login");
+		if (userRepository.findByUserName(user.getUserName()) == null) {
+			throw new IncorrectLoginCredentialsException("Incorrect Credentials");
+		} else {
+			User usr = userRepository.findByUserName(user.getUserName());
+			if (user.getUserName().equals(usr.getUserName())) {
+				if (user.getUserPassword().equals(usr.getUserPassword())) {
+					if (user.getRole().equals(usr.getRole())) {
+						IsLoggedIn = true;
+						return userRepository.findByUserName(user.getUserName());
+					} else {
+						throw new IncorrectLoginCredentialsException("Wrong Role");
+					}
+				} else {
+					throw new IncorrectLoginCredentialsException("Incorrect Credentials");
+				}
+			}
 		}
-		throw new IncorrectLoginCredentialsException();
+
+		return null;
 	}
-	
 
 }
-	
-	
 

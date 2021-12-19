@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -46,7 +47,8 @@ public class NGO {
 	 * Build the One To One Relationship with Training Course Class in model
 	 * package.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+//	Foreign key
+	@ManyToOne
 	@JoinColumn(name = "training_course")
 	private TrainingCourse trainingCourse;
 

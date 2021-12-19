@@ -7,11 +7,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.print.attribute.standard.Severity;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.stereotype.Service;
+
 import com.capgemini.model.NGO;
+import com.capgemini.model.TrainingCourse;
 import com.capgemini.repository.INGORepository;
 import com.capgemini.service.INGOService;
 
@@ -33,19 +38,24 @@ public class NGOControllerTests {
 	public void testGetNgoByMotive() {
 		String motive = "help";
 		when(repository.findByNgoMotive(motive))
-				.thenReturn((List<NGO>) Stream.of(new NGO()).collect(Collectors.toList()));
-		assertEquals(controller.viewNGOByMotive(motive), controller.viewNGOByMotive(motive));
+				.thenReturn(Stream
+						.of(new NGO(3, "asd", "asd", "asd", "asd", 100.2, 10, "asd", new TrainingCourse()))
+						.collect(Collectors.toList()));
+		assertEquals(1, service.viewNGOByMotive(motive).size());
 	}
 
 	/**
 	 * Testcase for Get All NGOS from database
 	 */
 	@Test
-	public void testgetAllNGO() {
-		when(repository.findAll()).thenReturn((List<NGO>) Stream.of(new NGO()).collect(Collectors.toList()));
-		assertEquals(controller.getallngos(), controller.getallngos());
+	public void viewAllTest() {
+		when(repository.findAll()).thenReturn(Stream.of(
+				new NGO(3, "asd", "asd", "asd", "asd", 100.2, 10, "asd", new TrainingCourse()))
+				.collect(Collectors.toList()));
 
+		assertEquals(1,service.viewAllNGO().size());
 	}
+	
 	/**
 	 * Testcase for Get All NGOS By "Location" from database 
 	 */
@@ -53,19 +63,20 @@ public class NGOControllerTests {
 	public void testGetNgoByLocation() {
 		String location = "mumbai";
 		when(repository.findByNgoLocation(location))
-				.thenReturn((List<NGO>) Stream.of(new NGO()).collect(Collectors.toList()));
-		assertEquals(controller.viewNGOByLocation(location), controller.viewNGOByLocation(location));
-
+				.thenReturn(Stream
+						.of(new NGO(3, "asd", "asd", "asd", "asd", 100.2, 10, "asd", new TrainingCourse()))
+						.collect(Collectors.toList()));
+		assertEquals(1, service.viewNGOByLocation(location).size());
 	}
 	/**
 	 * Testcase for save NGO in database 
 	 */
 	@Test
-	public void testSaveNgo() {
-		NGO ngo = new NGO(3, "asd", "asd", "asd", "asd", 100.2, 10, "asd", null);
+	public void addNgoTest() {
+		NGO ngo = new NGO(3, "asd", "asd", "asd", "asd", 100.2, 10, "asd", new TrainingCourse());
 		when(repository.save(ngo)).thenReturn(ngo);
-		assertEquals(controller.addngo(ngo), controller.addngo(ngo));
 
+		assertEquals(ngo, service.addNGO(ngo));
 	}
 	/**
 	 * Testcase for if Wrong NGO is Save in database 

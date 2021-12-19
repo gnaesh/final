@@ -2,16 +2,24 @@ package com.capgemini.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.naming.InvalidNameException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.capgemini.exception.InvalidNgoException;
 import com.capgemini.exception.NGOAlreadyExistException;
 import com.capgemini.exception.NGONotFoundException;
 import com.capgemini.exception.NoNgoPresentByLocationException;
 import com.capgemini.exception.NoNgoPresentByMotiveException;
 import com.capgemini.exception.NoSuchNgoException;
+import com.capgemini.exception.NotvalidActivitesException;
+import com.capgemini.exception.NotvalidLocationException;
+import com.capgemini.exception.NotvalidMotiveException;
+import com.capgemini.exception.NotvalidTypeException;
 import com.capgemini.model.NGO;
 import com.capgemini.repository.INGORepository;
 
@@ -48,14 +56,65 @@ public class NGOService implements INGOService {
 	/*
 	 * Service Method of Adding NGO In Database by using NGOId.
 	 */
+//	@Override
+//	public NGO addNGO(NGO ngo) {
+//		LOG.info("Service addNGO");
+//		if (!ingoRepository.existsById(ngo.getNgoId())) {
+//			return ingoRepository.save(ngo);
+//		} else {
+//			throw new NGOAlreadyExistException(ngo.getNgoId() + " this NGO is already in database");
+//		}
+//	}
 	@Override
 	public NGO addNGO(NGO ngo) {
 		LOG.info("Service addNGO");
-		if (!ingoRepository.existsById(ngo.getNgoId())) {
-			return ingoRepository.save(ngo);
-		} else {
-			throw new NGOAlreadyExistException(ngo.getNgoId() + " this NGO is already in database");
+		if (ngo.getNgoName() != null && ngo.getNgoActivities() != null && ngo.getNgoLocation() != null
+				&& ngo.getNgoMotive() != null && ngo.getNgoType() != null) {
+			if (!ingoRepository.existsById(ngo.getNgoId())) {
+
+				String name = ngo.getNgoName();
+				String validateName = "^[A-Za-z ]+";
+				String activites = ngo.getNgoActivities();
+				String validactivites = "^[A-Za-z ]+";
+				String location = ngo.getNgoLocation();
+				String validLoacation = "^[A-Za-z ]+";
+				String motive = ngo.getNgoMotive();
+				String validMotive = "^[A-Za-z ]+";
+				String type = ngo.getNgoType();
+				String validType = "^[A-Za-z ]+";
+
+				if (name.matches(validateName)) {
+					if (activites.matches(validactivites)) {
+						if (location.matches(validLoacation)) {
+							if (motive.matches(validMotive)) {
+								if (type.matches(validType)) {
+									ngo = ingoRepository.save(ngo);
+									return ngo;
+								} else {
+									LOG.error("NGO Type is not in Valid format ");
+									throw new NotvalidTypeException("Invalid format for Type " + type);
+								}
+							} else {
+								LOG.error("NGO Motive is not in Valid format ");
+								throw new NotvalidMotiveException(" Invalid format for Motive" + motive);
+							}
+						} else {
+							LOG.error("NGO Location is not in Valid format ");
+							throw new NotvalidLocationException("Invalid format for Location " + location);
+						}
+					} else {
+						LOG.error("NGO Activites is not in Valid format ");
+						throw new NotvalidActivitesException("Invalid format for Activites" + activites);
+					}
+				}
+					LOG.error("Unable to add NGO");
+					throw new InvalidNgoException("Invalid First Name " + name);
+				
+			}
 		}
+		throw new NGOAlreadyExistException();
+		
+	
 	}
 
 //------------------------------------------------------------------------------------

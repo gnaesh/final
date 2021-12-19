@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.capgemini.controller.SchemeController;
+import com.capgemini.controller.NGOController;
+
 
 @SpringBootApplication
 public class WomenEmpowermentApplication {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(SchemeController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NGOController.class);
 
 
 	public static void main(String[] args) {
